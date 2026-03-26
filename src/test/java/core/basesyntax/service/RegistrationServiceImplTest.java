@@ -37,14 +37,20 @@ class RegistrationServiceImplTest {
         testUserFirst.setAge(23);
         User result = registrationService.register(testUserFirst);
         assertEquals(testUserFirst, result);
+        User fromStorage = storageDao.get(testUserFirst.getLogin());
+        assertEquals(testUserFirst, fromStorage);
+    }
 
+    @Test
+    void register_edgeCaseValidUser_isOk() {
         User testUserSecond = new User();
         testUserSecond.setLogin("testUs");
         testUserSecond.setPassword("123456");
         testUserSecond.setAge(18);
-        registrationService.register(testUserSecond);
-        User actualSecond = storageDao.get(testUserSecond.getLogin());
-        assertEquals(testUserSecond, actualSecond);
+        User result = registrationService.register(testUserSecond);
+        assertEquals(testUserSecond, result);
+        User fromStorage = storageDao.get(testUserSecond.getLogin());
+        assertEquals(testUserSecond, fromStorage);
     }
 
     @Test
