@@ -24,14 +24,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_isWorking() {
+    void register_userIsNull_notOk() {
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(null));
+    }
+
+    @Test
+    void register_validUser_isOk() {
         User testUserFirst = new User();
         testUserFirst.setLogin("testUserFirst");
         testUserFirst.setPassword("12345678");
         testUserFirst.setAge(23);
-        registrationService.register(testUserFirst);
-        User actualFirst = storageDao.get(testUserFirst.getLogin());
-        assertEquals(testUserFirst, actualFirst);
+        User result = registrationService.register(testUserFirst);
+        assertEquals(testUserFirst, result);
 
         User testUserSecond = new User();
         testUserSecond.setLogin("testUs");
@@ -43,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_secondTime_notOk() {
+    void register_existingLogin_notOk() {
         User testUserFirst = new User();
         testUserFirst.setLogin("testUserFirst");
         testUserFirst.setPassword("12345678");
@@ -61,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login6CharactersAndMore_notOk() {
+    void register_loginLessThan6Chars_notOk() {
         User incorrectUserFirst = new User();
         incorrectUserFirst.setLogin("testU");
         incorrectUserFirst.setPassword("123456789");
@@ -85,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password6CharactersAndMore_notOk() {
+    void register_passwordLessThan6Chars_notOk() {
         User incorrectUserFirst = new User();
         incorrectUserFirst.setLogin("testUser");
         incorrectUserFirst.setPassword("12345");
@@ -109,7 +114,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsOver18_notOk() {
+    void register_ageLessThan18_notOk() {
         User incorrectUserFirst = new User();
         incorrectUserFirst.setLogin("testUser");
         incorrectUserFirst.setPassword("1234567");

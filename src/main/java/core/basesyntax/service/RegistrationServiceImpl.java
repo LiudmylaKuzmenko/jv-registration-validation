@@ -7,12 +7,15 @@ import core.basesyntax.exceptions.UserAlreadyExistsException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_CHARACTERS = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int minCharacters = 6;
-    private final int minAge = 18;
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new InvalidDataException("Login can't be null");
+        }
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login can't be null");
         }
@@ -23,13 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Age can't be null");
         }
 
-        if (user.getLogin().length() < minCharacters) {
+        if (user.getLogin().length() < MIN_CHARACTERS) {
             throw new InvalidDataException("Login should be 6 or more characters");
         }
-        if (user.getPassword().length() < minCharacters) {
+        if (user.getPassword().length() < MIN_CHARACTERS) {
             throw new InvalidDataException("Password should be 6 or more characters");
         }
-        if (user.getAge() < minAge) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("Age must be over 18 years old");
         }
 
